@@ -24,7 +24,22 @@
 
           <div class="text-gray-600 dark:text-gray-300 mt-2">
             <div class="text-gray-400"> Your monthly payment</div>
-            <ListingPrice :price="500" class="text-3xl" />
+            <ListingPrice :price="monthlyPayment" class="text-3xl" />
+          </div>
+
+          <div class="mt-2 text-gray-500">
+            <div class="flex justify-between">
+              <div>Total paid</div>
+              <div><ListingPrice :price="totalPaid" class="font-medium" /></div>
+            </div>
+            <div class="flex justify-between">
+              <div>Principle paid</div>
+              <div><ListingPrice :price="listing.price" class="font-medium" /></div>
+            </div>
+            <div class="flex justify-between">
+              <div>Interest paid</div>
+              <div><ListingPrice :price="totalInterest" class="font-medium" /></div>
+            </div>
           </div>
         </div>
       </Box>
@@ -33,11 +48,12 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import ListingAddress from '@/Components/ListingAddress.vue'
 import ListingPrice from '@/Components/ListingPrice.vue'
 import ListingSpace from '@/Components/ListingSpace.vue'
 import Box from '@/Components/UI/Box.vue'
-import { ref, computed } from 'vue'
+import { useMonthlyPayment } from '@/Composables/useMonthlyPayment'
 
 const interestRate = ref(2.5)
 const duration = ref(25)
@@ -45,4 +61,6 @@ const duration = ref(25)
 const props = defineProps({
   listing: Object,
 })
+
+const { monthlyPayment, totalPaid, totalInterest } = useMonthlyPayment(props.listing.price, interestRate, duration)
 </script>
